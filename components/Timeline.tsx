@@ -193,20 +193,20 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
 
         {selected ? (
           <div className="flex-1 overflow-y-auto">
-            {/* Cover */}
-            <div className="relative h-36 w-full overflow-hidden">
+            {/* Cover — taller, title overlaid at bottom */}
+            <div className="relative h-56 w-full shrink-0 overflow-hidden">
               {selected.coverImage ? (
                 <Image
                   src={selected.coverImage}
                   alt={selected.title}
                   fill
-                  className="object-cover opacity-70"
+                  className="object-cover opacity-80"
                   unoptimized
                 />
               ) : (
                 <div className="h-full w-full bg-gradient-to-br from-neon-cyan/10 to-neon-pink/10" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               {selected.award && (
                 <span
                   className={`absolute right-2 top-2 border px-2 py-0.5 font-space-mono text-xs ${
@@ -218,13 +218,15 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                   {selected.award === 'GOTY' ? '★ GOTY' : '✕ WORST'}
                 </span>
               )}
+              {/* Title overlaid on image */}
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <h2 className="font-orbitron text-sm font-bold leading-snug text-white drop-shadow-lg">
+                  {selected.title}
+                </h2>
+              </div>
             </div>
 
             <div className="space-y-3 p-3">
-              {/* Title */}
-              <h2 className="font-orbitron text-sm font-bold leading-snug text-white">
-                {selected.title}
-              </h2>
 
               {/* Platform */}
               {selected.platform && (
