@@ -12,7 +12,7 @@ const COLORS = [
 ]
 
 export default function RetroBackground() {
-  const [gridColor, setGridColor] = useState('#00f3ff')
+  const [gridColor, setGridColor] = useState('#ff00ff')
   const [showScanlines, setShowScanlines] = useState(false)
   const [glowEffect, setGlowEffect] = useState(true)
   const [panelPos, setPanelPos] = useState({ x: 24, y: 80 })
