@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { formatDate, getRatingStars } from '@/lib/utils'
@@ -40,6 +40,13 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
     setSelected(log)
     setSelectedYear(log.date.slice(0, 4))
   }
+
+  // Scroll the centre panel to the selected card whenever selection changes
+  useEffect(() => {
+    if (!selected) return
+    const card = document.getElementById(`card-${selected.slug}`)
+    card?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [selected])
 
   return (
     <div
@@ -113,6 +120,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           return (
             <article
               key={log.slug}
+              id={`card-${log.slug}`}
               data-testid={isRoundup ? 'year-wrapup-node' : 'timeline-node'}
               data-date={log.date}
               onClick={() => selectLog(log)}
