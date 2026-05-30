@@ -19,8 +19,27 @@ function groupByYear(logs: LogMeta[]) {
 }
 
 export default function Timeline({ logs }: { logs: LogMeta[] }) {
-  const [selected, setSelected] = useState<LogMeta | null>(logs[0] ?? null)
   const yearGroups = groupByYear(logs)
+  const initialYear = yearGroups[0]?.[0] ?? ''
+
+  const [selectedYear, setSelectedYear] = useState(initialYear)
+  const [selected, setSelected] = useState<LogMeta | null>(logs[0] ?? null)
+
+  const visibleLogs = logs.filter(l => l.date.startsWith(selectedYear))
+
+  function selectYear(year: string) {
+    setSelectedYear(year)
+    // Auto-select the first game of that year if current selection isn't in it
+    const yearLogs = logs.filter(l => l.date.startsWith(year))
+    if (selected && !yearLogs.find(l => l.slug === selected.slug)) {
+      setSelected(yearLogs[0] ?? null)
+    }
+  }
+
+  function selectLog(log: LogMeta) {
+    setSelected(log)
+    setSelectedYear(log.date.slice(0, 4))
+  }
 
   return (
     <div
@@ -37,16 +56,28 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
         <div className="flex-1 space-y-4 overflow-y-auto p-2">
           {yearGroups.map(([year, entries]) => (
             <div key={year}>
-              <p className="mb-1 px-1 font-orbitron text-xs font-bold tracking-widest text-neon-pink">
+              <button
+                onClick={() => selectYear(year)}
+                className={`mb-1 w-full px-1 text-left font-orbitron text-xs font-bold tracking-widest transition-all ${
+                  selectedYear === year
+                    ? 'neon-text-pink'
+                    : 'text-neon-pink/40 hover:text-neon-pink/80'
+                }`}
+              >
                 {year}
-              </p>
+                {selectedYear === year && (
+                  <span className="ml-1 font-space-mono text-[9px] text-gray-600">
+                    [{entries.length}]
+                  </span>
+                )}
+              </button>
               {entries.map((log) => {
                 const month = MONTH_ABBR[new Date(log.date).getUTCMonth()]
                 const isActive = selected?.slug === log.slug
                 return (
                   <button
                     key={log.slug}
-                    onClick={() => setSelected(log)}
+                    onClick={() => selectLog(log)}
                     className={`flex w-full items-baseline gap-2 rounded-sm px-2 py-1 text-left transition-all ${
                       isActive
                         ? 'bg-neon-cyan/10 text-neon-cyan'
@@ -65,9 +96,18 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
         </div>
       </aside>
 
-      {/* CENTER: Compact card list */}
-      <div className="space-y-2 overflow-y-auto pr-1">
-        {logs.map((log) => {
+      {/* CENTER: Filtered card list for selected year */}
+      <div className="flex flex-col overflow-hidden">
+        <div className="border-b border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+          <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
+            // {selectedYear}
+            <span className="ml-2 font-space-mono text-[10px] font-normal text-gray-600">
+              {visibleLogs.length} ENTR{visibleLogs.length !== 1 ? 'IES' : 'Y'}
+            </span>
+          </p>
+        </div>
+        <div className="space-y-2 overflow-y-auto pr-1 pt-2">
+        {visibleLogs.map((log) => {
           const isActive = selected?.slug === log.slug
           const isRoundup = log.category === 'roundup'
           return (
@@ -75,7 +115,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
               key={log.slug}
               data-testid={isRoundup ? 'year-wrapup-node' : 'timeline-node'}
               data-date={log.date}
-              onClick={() => setSelected(log)}
+              onClick={() => selectLog(log)}
               className={`cursor-pointer border transition-all duration-200 ${
                 isActive
                   ? 'border-neon-cyan bg-surface neon-glow-cyan'
@@ -140,6 +180,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
             </article>
           )
         })}
+        </div>
       </div>
 
       {/* RIGHT: Detail panel */}
