@@ -35,6 +35,20 @@ export default function RootLayout({
         <TerminalNav />
 
         <main className="relative z-10 mx-auto max-w-5xl px-4 py-8">{children}</main>
+
+        <footer className="relative z-10 border-t border-neon-cyan/10 py-4 text-center">
+          <p className="font-space-mono text-xs text-gray-600">
+            Game data and images provided by{' '}
+            <a
+              href="https://rawg.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 transition-colors hover:text-neon-cyan"
+            >
+              RAWG
+            </a>
+          </p>
+        </footer>
       </body>
     </html>
   )
