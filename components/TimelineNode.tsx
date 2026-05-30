@@ -81,8 +81,7 @@ export default function TimelineNode({ log, side }: TimelineNodeProps) {
           {log.rating !== null && (
             <div className="mb-2 flex items-baseline gap-2">
               <span className="font-space-mono text-sm neon-text-yellow">{getRatingStars(log.rating)}</span>
-              <span className="font-orbitron text-sm font-bold neon-text-yellow">{log.rating}</span>
-              <span className="font-space-mono text-xs text-gray-500">/10</span>
+              <span className="font-orbitron text-sm font-bold neon-text-yellow">{log.rating}/10</span>
             </div>
           )}
 
