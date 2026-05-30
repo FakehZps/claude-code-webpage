@@ -34,7 +34,7 @@ export default function RootLayout({
 
         <TerminalNav />
 
-        <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+        <main className="relative z-10 mx-auto max-w-5xl px-4 py-8">{children}</main>
       </body>
     </html>
   )

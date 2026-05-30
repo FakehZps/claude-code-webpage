@@ -1,11 +1,14 @@
 import { getAllLogs } from '@/lib/mdx'
 import Timeline from '@/components/Timeline'
+import RetroBackground from '@/components/RetroBackground'
 
 export default function HomePage() {
   const logs = getAllLogs()
 
   return (
     <div>
+      <RetroBackground />
+
       {/* Header */}
       <header className="mb-16 text-center">
         <p className="mb-2 font-space-mono text-xs tracking-widest text-gray-600">
