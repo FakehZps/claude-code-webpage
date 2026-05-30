@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-base text-gray-200;
+    font-family: var(--font-space-mono), monospace;
+  }
+
+  ::selection {
+    background-color: #00f3ff33;
+    color: #00f3ff;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  /* Neon cyan utilities */
+  .neon-glow-cyan {
+    box-shadow: 0 0 5px #00f3ff, 0 0 20px #00f3ff;
+  }
+
+  .neon-text-cyan {
+    color: #00f3ff;
+    text-shadow: 0 0 5px #00f3ff, 0 0 10px #00f3ff;
+  }
+
+  /* Neon pink utilities */
+  .neon-glow-pink {
+    box-shadow: 0 0 5px #ff003c, 0 0 20px #ff003c;
+  }
+
+  .neon-text-pink {
+    color: #ff003c;
+    text-shadow: 0 0 5px #ff003c, 0 0 10px #ff003c;
+  }
+
+  /* Neon yellow utilities */
+  .neon-glow-yellow {
+    box-shadow: 0 0 5px #fcee0a, 0 0 20px #fcee0a;
+  }
+
+  .neon-text-yellow {
+    color: #fcee0a;
+    text-shadow: 0 0 5px #fcee0a, 0 0 10px #fcee0a;
+  }
+
+  /* CRT scanline overlay */
+  .scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  }
+
+  /* Blinking cursor */
+  .cursor-blink {
+    animation: blink 1s step-end infinite;
+  }
+}
