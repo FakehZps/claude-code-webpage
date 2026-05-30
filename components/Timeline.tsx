@@ -124,7 +124,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
             >
               <div className="flex gap-3">
                 {/* Thumbnail */}
-                <div className="relative h-20 w-28 shrink-0 overflow-hidden">
+                <div className="relative h-24 w-36 shrink-0 overflow-hidden">
                   {log.coverImage ? (
                     <Image
                       src={log.coverImage}
@@ -156,7 +156,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                       YEAR WRAP-UP
                     </span>
                   )}
-                  <p className="mb-1 truncate font-orbitron text-xs font-bold leading-snug text-white">
+                  <p className="mb-1 line-clamp-2 font-orbitron text-xs font-bold leading-snug text-white">
                     {log.title.replace(/\s*[—–].+$/, '')}
                   </p>
                   <div className="flex flex-wrap items-center gap-2">
@@ -194,7 +194,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
         {selected ? (
           <div className="flex-1 overflow-y-auto">
             {/* Cover — taller, title overlaid at bottom */}
-            <div className="relative h-56 w-full shrink-0 overflow-hidden">
+            <div className="relative h-64 w-full shrink-0 overflow-hidden">
               {selected.coverImage ? (
                 <Image
                   src={selected.coverImage}
