@@ -60,7 +60,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                 onClick={() => selectYear(year)}
                 className={`mb-1 w-full px-1 text-left font-orbitron text-xs font-bold tracking-widest transition-all ${
                   selectedYear === year
-                    ? 'neon-text-pink'
+                    ? 'text-neon-pink'
                     : 'text-neon-pink/40 hover:text-neon-pink/80'
                 }`}
               >
