@@ -47,6 +47,7 @@ export default function RootLayout({
             >
               RAWG
             </a>
+            {' '}· Game cover art © respective publishers and developers.
           </p>
         </footer>
       </body>
