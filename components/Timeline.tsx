@@ -232,14 +232,16 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                 </p>
               </div>
 
-              {/* Link to full log */}
-              <Link
-                href={`/logs/${selected.slug}`}
-                data-testid="access-log-link"
-                className="inline-block border border-neon-cyan/40 px-3 py-1.5 font-space-mono text-xs text-neon-cyan transition-all duration-150 hover:border-neon-cyan hover:bg-neon-cyan/10 hover:neon-glow-cyan"
-              >
-                [&gt; Access Full Log]
-              </Link>
+              {/* Link to full log — only for MDX-backed entries */}
+              {selected.hasFullReview && (
+                <Link
+                  href={`/logs/${selected.slug}`}
+                  data-testid="access-log-link"
+                  className="inline-block border border-neon-cyan/40 px-3 py-1.5 font-space-mono text-xs text-neon-cyan transition-all duration-150 hover:border-neon-cyan hover:bg-neon-cyan/10 hover:neon-glow-cyan"
+                >
+                  [&gt; Access Full Log]
+                </Link>
+              )}
             </div>
           </div>
         ) : (

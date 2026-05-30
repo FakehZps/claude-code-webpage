@@ -1,9 +1,16 @@
 import { getAllLogs } from '@/lib/mdx'
+import { getGamesData } from '@/lib/games'
 import Timeline from '@/components/Timeline'
 import RetroBackground from '@/components/RetroBackground'
 
 export default function HomePage() {
-  const logs = getAllLogs()
+  const mdxLogs  = getAllLogs()
+  const jsonLogs = getGamesData()
+
+  // Merge: MDX entries take priority; sort by date descending
+  const mdxSlugs = new Set(mdxLogs.map(l => l.slug))
+  const logs = [...mdxLogs, ...jsonLogs.filter(l => !mdxSlugs.has(l.slug))]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
     <div>
@@ -20,7 +27,7 @@ export default function HomePage() {
               MEMORY_TIMELINE
             </h1>
             <p className="mt-1 font-space-mono text-xs text-gray-500">
-              FakeH.dat &nbsp;|&nbsp; {logs.length} LOG{logs.length !== 1 ? 'S' : ''} INDEXED
+              FakeH.dat &nbsp;|&nbsp; {logs.filter(l => l.category === 'review').length} GAMES LOGGED
             </p>
           </div>
           <div className="mx-auto h-px max-w-xs bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50" />

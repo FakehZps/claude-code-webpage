@@ -16,6 +16,7 @@ export interface LogFrontmatter {
 
 export interface LogMeta extends LogFrontmatter {
   slug: string
+  hasFullReview?: boolean
 }
 
 export interface LogEntry extends LogMeta {
@@ -45,6 +46,7 @@ export function getAllLogs(): LogMeta[] {
     return {
       ...(data as LogFrontmatter),
       slug,
+      hasFullReview: true,
     } satisfies LogMeta
   })
 
