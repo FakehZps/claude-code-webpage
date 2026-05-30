@@ -66,7 +66,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
               >
                 {year}
                 {selectedYear === year && (
-                  <span className="ml-1 font-space-mono text-[9px] text-gray-600">
+                  <span className="ml-1 font-space-mono text-[9px] text-gray-400">
                     [{entries.length}]
                   </span>
                 )}
@@ -81,7 +81,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                     className={`flex w-full items-baseline gap-2 rounded-sm px-2 py-1 text-left transition-all ${
                       isActive
                         ? 'bg-neon-cyan/10 text-neon-cyan'
-                        : 'text-gray-500 hover:text-gray-300'
+                        : 'text-gray-400 hover:text-gray-100'
                     }`}
                   >
                     <span className="shrink-0 font-space-mono text-xs">{month}</span>
@@ -101,7 +101,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
         <div className="border-b border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
           <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
             // {selectedYear}
-            <span className="ml-2 font-space-mono text-[10px] font-normal text-gray-600">
+            <span className="ml-2 font-space-mono text-[10px] font-normal text-gray-400">
               {visibleLogs.length} ENTR{visibleLogs.length !== 1 ? 'IES' : 'Y'}
             </span>
           </p>
@@ -172,7 +172,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 font-space-mono text-[10px] text-gray-600">
+                  <p className="mt-1 font-space-mono text-[10px] text-gray-400">
                     {formatDate(log.date)}
                   </p>
                 </div>
@@ -231,7 +231,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
               {/* Platform */}
               {selected.platform && (
                 <div className="flex items-center gap-2">
-                  <span className="w-20 shrink-0 font-space-mono text-[10px] tracking-widest text-gray-500">
+                  <span className="w-20 shrink-0 font-space-mono text-[10px] tracking-widest text-gray-400">
                     PLATFORM
                   </span>
                   <span className="border border-neon-cyan/30 px-2 py-0.5 font-space-mono text-xs text-neon-cyan">
@@ -243,7 +243,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
               {/* Rating */}
               {selected.rating !== null && (
                 <div className="flex items-center gap-2">
-                  <span className="w-20 shrink-0 font-space-mono text-[10px] tracking-widest text-gray-500">
+                  <span className="w-20 shrink-0 font-space-mono text-[10px] tracking-widest text-gray-400">
                     RATING
                   </span>
                   <span className="font-space-mono text-xs neon-text-yellow">
@@ -260,17 +260,17 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                 <span className="w-20 shrink-0 font-space-mono text-[10px] tracking-widest text-gray-500">
                   COMPLETED
                 </span>
-                <span className="font-space-mono text-xs text-gray-300">
+                <span className="font-space-mono text-xs text-gray-100">
                   {formatDate(selected.completionDate ?? selected.date)}
                 </span>
               </div>
 
               {/* Comment */}
               <div>
-                <span className="mb-1 block font-space-mono text-[10px] tracking-widest text-gray-500">
+                <span className="mb-1 block font-space-mono text-[10px] tracking-widest text-gray-400">
                   COMMENT
                 </span>
-                <p className="border-l-2 border-neon-cyan/30 pl-2 font-space-mono text-xs leading-relaxed text-gray-400">
+                <p className="border-l-2 border-neon-cyan/30 pl-2 font-space-mono text-xs leading-relaxed text-gray-300">
                   {selected.excerpt}
                 </p>
               </div>
@@ -289,7 +289,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center p-4 text-center">
-            <p className="font-space-mono text-xs text-gray-600">
+            <p className="font-space-mono text-xs text-gray-400">
               SELECT A LOG<br />TO VIEW DETAILS
               <span className="animate-blink">█</span>
             </p>
