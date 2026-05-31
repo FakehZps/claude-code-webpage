@@ -105,13 +105,13 @@
   },
   {
     "slug": "lanoire-2015",
-    "title": "L.A.Noire",
+    "title": "L.A. Noire",
     "date": "2015-02-18",
     "completionDate": "2015-02-18",
     "category": "review",
     "platform": "PC",
     "rating": 8,
-    "coverImage": null,
+    "coverImage": "/images/la-noire-2015.jpg",
     "excerpt": "LAPD!",
     "award": null,
     "hasFullReview": false
