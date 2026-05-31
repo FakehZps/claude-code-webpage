@@ -47,12 +47,12 @@ export default function TimelineNode({ log, side }: TimelineNodeProps) {
           )}
           {/* Award badge */}
           {log.award === 'GOTY' && (
-            <span className="absolute right-2 top-2 border border-neon-yellow px-2 py-0.5 font-space-mono text-xs neon-text-yellow">
+            <span className="absolute right-2 top-2 border border-neon-yellow bg-black/80 px-2 py-0.5 font-space-mono text-xs neon-text-yellow">
               ★ GOTY
             </span>
           )}
           {log.award === 'WORST' && (
-            <span className="absolute right-2 top-2 border border-neon-pink px-2 py-0.5 font-space-mono text-xs neon-text-pink">
+            <span className="absolute right-2 top-2 border border-neon-pink bg-black/80 px-2 py-0.5 font-space-mono text-xs neon-text-pink">
               ✕ WORST
             </span>
           )}

@@ -71,12 +71,12 @@ export default function LogPage({ params }: PageProps) {
               </span>
             )}
             {log.award === 'GOTY' && (
-              <span className="border border-neon-yellow px-2 py-0.5 font-space-mono text-xs neon-text-yellow">
+              <span className="border border-neon-yellow bg-black/80 px-2 py-0.5 font-space-mono text-xs neon-text-yellow">
                 ★ GAME OF THE YEAR
               </span>
             )}
             {log.award === 'WORST' && (
-              <span className="border border-neon-pink px-2 py-0.5 font-space-mono text-xs neon-text-pink">
+              <span className="border border-neon-pink bg-black/80 px-2 py-0.5 font-space-mono text-xs neon-text-pink">
                 ✕ WORST OF YEAR
               </span>
             )}

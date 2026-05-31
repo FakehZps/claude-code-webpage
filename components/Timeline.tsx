@@ -146,7 +146,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                   )}
                   {log.award && (
                     <span
-                      className={`absolute bottom-1 left-1 border px-1 font-space-mono text-[10px] ${
+                      className={`absolute bottom-1 left-1 border bg-black/80 px-1 font-space-mono text-[10px] ${
                         log.award === 'GOTY'
                           ? 'border-neon-yellow neon-text-yellow'
                           : 'border-neon-pink neon-text-pink'
@@ -217,7 +217,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
               {selected.award && (
                 <span
-                  className={`absolute right-2 top-2 border px-2 py-0.5 font-space-mono text-xs ${
+                  className={`absolute right-2 top-2 border bg-black/80 px-2 py-0.5 font-space-mono text-xs ${
                     selected.award === 'GOTY'
                       ? 'border-neon-yellow neon-text-yellow'
                       : 'border-neon-pink neon-text-pink'
