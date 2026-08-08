@@ -18,6 +18,9 @@ function groupByYear(logs: LogMeta[]) {
   return Object.entries(groups).sort(([a], [b]) => Number(b) - Number(a))
 }
 
+const RATING_OPTIONS = [9, 8, 7, 6]
+const AWARD_OPTIONS: Array<'GOTY' | 'WORST'> = ['GOTY', 'WORST']
+
 export default function Timeline({ logs }: { logs: LogMeta[] }) {
   const yearGroups = groupByYear(logs)
   const initialYear = yearGroups[0]?.[0] ?? ''
@@ -25,22 +28,47 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
   const [selectedYear, setSelectedYear] = useState(initialYear)
   const [selected, setSelected] = useState<LogMeta | null>(logs[0] ?? null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [filterPlatform, setFilterPlatform] = useState('ALL')
+  const [filterGenre, setFilterGenre] = useState('ALL')
+  const [filterAward, setFilterAward] = useState<'ALL' | 'GOTY' | 'WORST'>('ALL')
+  const [filterMinRating, setFilterMinRating] = useState<number | null>(null)
+
+  const platforms = Array.from(new Set(logs.map(l => l.platform).filter((p): p is string => !!p))).sort()
+  const genres = Array.from(new Set(logs.map(l => l.genre).filter((g): g is string => !!g))).sort()
 
   const query = searchQuery.trim().toLowerCase()
   const isSearching = query.length > 0
-  const searchResults = isSearching
-    ? logs.filter(
-        l =>
-          l.title.toLowerCase().includes(query) ||
-          (l.platform ?? '').toLowerCase().includes(query)
-      )
+  const hasActiveFilters =
+    filterPlatform !== 'ALL' || filterGenre !== 'ALL' || filterAward !== 'ALL' || filterMinRating !== null
+  const isFiltering = isSearching || hasActiveFilters
+
+  const filteredResults = isFiltering
+    ? logs.filter(l => {
+        if (isSearching) {
+          const haystack = [l.title, l.platform, l.genre, l.excerpt].filter(Boolean).join(' ').toLowerCase()
+          if (!haystack.includes(query)) return false
+        }
+        if (filterPlatform !== 'ALL' && l.platform !== filterPlatform) return false
+        if (filterGenre !== 'ALL' && l.genre !== filterGenre) return false
+        if (filterAward !== 'ALL' && l.award !== filterAward) return false
+        if (filterMinRating !== null && (l.rating ?? -1) < filterMinRating) return false
+        return true
+      })
     : []
-  const visibleLogs = isSearching
-    ? searchResults
+  const visibleLogs = isFiltering
+    ? filteredResults
     : logs.filter(l => l.date.startsWith(selectedYear))
+
+  function clearFilters() {
+    setFilterPlatform('ALL')
+    setFilterGenre('ALL')
+    setFilterAward('ALL')
+    setFilterMinRating(null)
+  }
 
   function selectYear(year: string) {
     setSearchQuery('')
+    clearFilters()
     setSelectedYear(year)
     // Auto-select the first game of that year if current selection isn't in it
     const yearLogs = logs.filter(l => l.date.startsWith(year))
@@ -54,6 +82,14 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
     setSelectedYear(log.date.slice(0, 4))
   }
 
+  function selectRandomLog() {
+    if (logs.length === 0) return
+    setSearchQuery('')
+    clearFilters()
+    const random = logs[Math.floor(Math.random() * logs.length)]
+    selectLog(random)
+  }
+
   // Scroll the centre panel to the selected card whenever selection changes
   useEffect(() => {
     if (!selected) return
@@ -64,13 +100,13 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
   return (
     <div data-testid="timeline">
       {/* SEARCH BAR */}
-      <div className="mb-3 flex items-center gap-2 border border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+      <div className="mb-2 flex items-center gap-2 border border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
         <span className="font-space-mono text-xs text-neon-cyan">SEARCH&gt;</span>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="title or platform..."
+          placeholder="title, platform, genre..."
           data-testid="search-input"
           className="flex-1 bg-transparent font-space-mono text-xs text-gray-100 placeholder:text-gray-600 focus:outline-none"
         />
@@ -82,6 +118,76 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
             aria-label="Clear search"
           >
             [x]
+          </button>
+        )}
+        <button
+          onClick={selectRandomLog}
+          data-testid="random-log-button"
+          className="shrink-0 font-space-mono text-xs tracking-widest text-neon-yellow hover:neon-text-yellow"
+        >
+          [ RANDOM ]
+        </button>
+      </div>
+
+      {/* FILTER BAR */}
+      <div className="mb-3 flex flex-wrap items-center gap-2 border border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+        <span className="font-space-mono text-[10px] tracking-widest text-gray-500">FILTER&gt;</span>
+
+        <select
+          value={filterPlatform}
+          onChange={(e) => setFilterPlatform(e.target.value)}
+          data-testid="filter-platform"
+          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+        >
+          <option value="ALL">ALL PLATFORMS</option>
+          {platforms.map(p => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+
+        <select
+          value={filterGenre}
+          onChange={(e) => setFilterGenre(e.target.value)}
+          data-testid="filter-genre"
+          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+        >
+          <option value="ALL">ALL GENRES</option>
+          {genres.map(g => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
+
+        <select
+          value={filterMinRating ?? ''}
+          onChange={(e) => setFilterMinRating(e.target.value ? Number(e.target.value) : null)}
+          data-testid="filter-rating"
+          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+        >
+          <option value="">ANY RATING</option>
+          {RATING_OPTIONS.map(r => (
+            <option key={r} value={r}>{r}+ /10</option>
+          ))}
+        </select>
+
+        <select
+          value={filterAward}
+          onChange={(e) => setFilterAward(e.target.value as 'ALL' | 'GOTY' | 'WORST')}
+          data-testid="filter-award"
+          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+        >
+          <option value="ALL">ALL AWARDS</option>
+          {AWARD_OPTIONS.map(a => (
+            <option key={a} value={a}>{a} ONLY</option>
+          ))}
+        </select>
+
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            data-testid="filter-clear"
+            className="font-space-mono text-[10px] text-gray-500 hover:text-neon-pink"
+          >
+            [x] RESET
           </button>
         )}
       </div>
@@ -141,19 +247,19 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
       <div className="flex flex-col overflow-hidden">
         <div className="border-b border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
           <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
-            // {isSearching ? 'SEARCH RESULTS' : selectedYear}
+            // {isSearching ? 'SEARCH RESULTS' : hasActiveFilters ? 'FILTERED' : selectedYear}
             <span className="ml-2 font-space-mono text-[10px] font-normal text-gray-400">
               {visibleLogs.length} ENTR{visibleLogs.length !== 1 ? 'IES' : 'Y'}
             </span>
           </p>
         </div>
-        {isSearching && visibleLogs.length === 0 ? (
+        {isFiltering && visibleLogs.length === 0 ? (
           <div
             data-testid="search-empty"
             className="flex flex-1 items-center justify-center p-4 text-center"
           >
             <p className="font-space-mono text-xs text-gray-400">
-              NO MATCHES FOR &quot;{searchQuery.trim()}&quot;
+              {isSearching ? <>NO MATCHES FOR &quot;{searchQuery.trim()}&quot;</> : 'NO MATCHES FOR CURRENT FILTERS'}
             </p>
           </div>
         ) : (
@@ -215,6 +321,11 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                     {log.platform && (
                       <span className="border border-neon-cyan/30 px-1 font-space-mono text-[10px] text-neon-cyan">
                         {log.platform}
+                      </span>
+                    )}
+                    {log.genre && (
+                      <span className="border border-neon-pink/30 px-1 font-space-mono text-[10px] text-neon-pink">
+                        {log.genre}
                       </span>
                     )}
                     {log.rating !== null && (
@@ -289,6 +400,18 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                   </span>
                   <span className="border border-neon-cyan/30 px-2 py-0.5 font-space-mono text-xs text-neon-cyan">
                     {selected.platform}
+                  </span>
+                </div>
+              )}
+
+              {/* Genre */}
+              {selected.genre && (
+                <div className="flex items-center gap-2">
+                  <span className="w-20 shrink-0 font-space-mono text-[10px] tracking-widest text-gray-400">
+                    GENRE
+                  </span>
+                  <span className="border border-neon-pink/30 px-2 py-0.5 font-space-mono text-xs text-neon-pink">
+                    {selected.genre}
                   </span>
                 </div>
               )}

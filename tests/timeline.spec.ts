@@ -84,4 +84,58 @@ test.describe('Timeline Search', () => {
     await page.locator('[data-testid="search-clear"]').click()
     await expect(search).toHaveValue('')
   })
+
+  test('searching matches genre', async ({ page }) => {
+    await page.goto('/')
+    const search = page.locator('[data-testid="search-input"]')
+    await search.fill('jrpg')
+
+    const nodes = page.locator('[data-testid="timeline-node"]')
+    const count = await nodes.count()
+    expect(count).toBeGreaterThanOrEqual(1)
+    await expect(nodes.first()).toContainText(/jrpg/i)
+  })
+})
+
+test.describe('Timeline Filters', () => {
+  test('genre filter narrows results to that genre', async ({ page }) => {
+    await page.goto('/')
+    await page.locator('[data-testid="filter-genre"]').selectOption('RPG')
+
+    const nodes = page.locator('[data-testid="timeline-node"]')
+    const count = await nodes.count()
+    expect(count).toBeGreaterThanOrEqual(1)
+    for (let i = 0; i < count; i++) {
+      await expect(nodes.nth(i)).toContainText('RPG')
+    }
+  })
+
+  test('award filter shows only GOTY picks', async ({ page }) => {
+    await page.goto('/')
+    await page.locator('[data-testid="filter-award"]').selectOption('GOTY')
+
+    const nodes = page.locator('[data-testid="timeline-node"], [data-testid="year-wrapup-node"]')
+    const count = await nodes.count()
+    expect(count).toBeGreaterThanOrEqual(1)
+    for (let i = 0; i < count; i++) {
+      await expect(nodes.nth(i)).toContainText('GOTY')
+    }
+  })
+
+  test('reset button clears active filters', async ({ page }) => {
+    await page.goto('/')
+    await page.locator('[data-testid="filter-award"]').selectOption('GOTY')
+    await expect(page.locator('[data-testid="filter-clear"]')).toBeVisible()
+    await page.locator('[data-testid="filter-clear"]').click()
+    await expect(page.locator('[data-testid="filter-clear"]')).toHaveCount(0)
+    await expect(page.locator('[data-testid="filter-award"]')).toHaveValue('ALL')
+  })
+})
+
+test.describe('Random Log Button', () => {
+  test('clicking random selects a log and shows its detail', async ({ page }) => {
+    await page.goto('/')
+    await page.locator('[data-testid="random-log-button"]').click()
+    await expect(page.locator('[data-testid="access-log-link"]')).toBeVisible()
+  })
 })
