@@ -8,6 +8,7 @@ export interface LogFrontmatter {
   completionDate: string | null
   category: 'review' | 'roundup'
   platform: string | null
+  genre: string | null
   rating: number | null
   coverImage: string
   excerpt: string

@@ -49,6 +49,7 @@ date: "YYYY-MM-DD"           # Controls sort order (descending)
 completionDate: "YYYY-MM-DD" # null for roundups
 category: "review" | "roundup"
 platform: string | null
+genre: string | null
 rating: number | null        # 0–10 scale, displayed as 0–5 stars
 coverImage: "/images/..."    # Served from public/images/; gracefully absent
 excerpt: string
