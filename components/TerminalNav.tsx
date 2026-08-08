@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils'
 const navLinks = [
   { label: 'HOME', href: '/', testId: 'nav-home-link' },
   { label: 'ARCHIVE', href: '/', testId: 'nav-archive-link' },
+  { label: 'AWARDS', href: '/awards', testId: 'nav-awards-link' },
+  { label: 'STATS', href: '/stats', testId: 'nav-stats-link' },
 ]
 
 export default function TerminalNav() {
