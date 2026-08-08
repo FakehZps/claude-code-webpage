@@ -87,6 +87,7 @@ export default function StatsPage() {
   }
   const years = Array.from(yearCounts.keys()).sort()
   const maxYearCount = Math.max(...Array.from(yearCounts.values()), 1)
+  const busiestYear = Array.from(yearCounts.entries()).sort((a, b) => b[1] - a[1])[0]
 
   const ratingBuckets = new Map<number, number>()
   for (let i = 0; i <= 10; i++) ratingBuckets.set(i, 0)
@@ -113,9 +114,6 @@ export default function StatsPage() {
   const topGenres = topN(genreCounts, 8)
   const maxGenreCount = Math.max(...topGenres.map(([, c]) => c), 1)
 
-  const gotyCount = allLogs.filter((l) => l.award === 'GOTY').length
-  const worstCount = allLogs.filter((l) => l.award === 'WORST').length
-
   return (
     <div>
       <RetroBackground />
@@ -139,7 +137,10 @@ export default function StatsPage() {
             <StatTile label="GAMES LOGGED" value={String(totalGames)} />
             <StatTile label="AVG RATING" value={`${avgRating}/10`} />
             <StatTile label="YEARS TRACKED" value={String(years.length)} />
-            <StatTile label="GOTY / WORST" value={`${gotyCount} / ${worstCount}`} />
+            <StatTile
+              label={`BUSIEST YEAR${busiestYear ? ` (${busiestYear[1]})` : ''}`}
+              value={busiestYear ? busiestYear[0] : '—'}
+            />
           </div>
 
           {/* ENTRIES PER YEAR */}
