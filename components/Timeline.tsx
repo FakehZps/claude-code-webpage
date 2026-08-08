@@ -24,10 +24,23 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
 
   const [selectedYear, setSelectedYear] = useState(initialYear)
   const [selected, setSelected] = useState<LogMeta | null>(logs[0] ?? null)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const visibleLogs = logs.filter(l => l.date.startsWith(selectedYear))
+  const query = searchQuery.trim().toLowerCase()
+  const isSearching = query.length > 0
+  const searchResults = isSearching
+    ? logs.filter(
+        l =>
+          l.title.toLowerCase().includes(query) ||
+          (l.platform ?? '').toLowerCase().includes(query)
+      )
+    : []
+  const visibleLogs = isSearching
+    ? searchResults
+    : logs.filter(l => l.date.startsWith(selectedYear))
 
   function selectYear(year: string) {
+    setSearchQuery('')
     setSelectedYear(year)
     // Auto-select the first game of that year if current selection isn't in it
     const yearLogs = logs.filter(l => l.date.startsWith(year))
@@ -49,10 +62,31 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
   }, [selected])
 
   return (
-    <div
-      data-testid="timeline"
-      className="grid h-[75vh] grid-cols-1 gap-3 md:grid-cols-[1fr_280px] lg:grid-cols-[180px_1fr_300px]"
-    >
+    <div data-testid="timeline">
+      {/* SEARCH BAR */}
+      <div className="mb-3 flex items-center gap-2 border border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+        <span className="font-space-mono text-xs text-neon-cyan">SEARCH&gt;</span>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="title or platform..."
+          data-testid="search-input"
+          className="flex-1 bg-transparent font-space-mono text-xs text-gray-100 placeholder:text-gray-600 focus:outline-none"
+        />
+        {isSearching && (
+          <button
+            onClick={() => setSearchQuery('')}
+            data-testid="search-clear"
+            className="font-space-mono text-xs text-gray-500 hover:text-neon-pink"
+            aria-label="Clear search"
+          >
+            [x]
+          </button>
+        )}
+      </div>
+
+      <div className="grid h-[75vh] grid-cols-1 gap-3 md:grid-cols-[1fr_280px] lg:grid-cols-[180px_1fr_300px]">
       {/* LEFT: Archive index — hidden on mobile/tablet */}
       <aside className="hidden flex-col overflow-hidden border border-neon-cyan/20 bg-black/40 backdrop-blur-sm lg:flex">
         <div className="border-b border-neon-cyan/20 px-3 py-2">
@@ -107,12 +141,22 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
       <div className="flex flex-col overflow-hidden">
         <div className="border-b border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
           <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
-            // {selectedYear}
+            // {isSearching ? 'SEARCH RESULTS' : selectedYear}
             <span className="ml-2 font-space-mono text-[10px] font-normal text-gray-400">
               {visibleLogs.length} ENTR{visibleLogs.length !== 1 ? 'IES' : 'Y'}
             </span>
           </p>
         </div>
+        {isSearching && visibleLogs.length === 0 ? (
+          <div
+            data-testid="search-empty"
+            className="flex flex-1 items-center justify-center p-4 text-center"
+          >
+            <p className="font-space-mono text-xs text-gray-400">
+              NO MATCHES FOR &quot;{searchQuery.trim()}&quot;
+            </p>
+          </div>
+        ) : (
         <div className="space-y-2 overflow-y-auto pr-1 pt-2">
         {visibleLogs.map((log) => {
           const isActive = selected?.slug === log.slug
@@ -189,6 +233,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           )
         })}
         </div>
+        )}
       </div>
 
       {/* RIGHT: Detail panel */}
@@ -304,6 +349,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           </div>
         )}
       </aside>
+      </div>
     </div>
   )
 }

@@ -7,22 +7,22 @@ test.describe('Timeline Homepage', () => {
     await expect(timeline).toBeVisible()
   })
 
-  test('TimelineNode cards are visible with Access Log links', async ({ page }) => {
+  test('selecting a TimelineNode card shows its Access Log link in the detail panel', async ({ page }) => {
     await page.goto('/')
     const nodes = page.locator('[data-testid="timeline-node"]')
     const count = await nodes.count()
     expect(count).toBeGreaterThanOrEqual(1)
 
-    for (let i = 0; i < count; i++) {
-      const node = nodes.nth(i)
-      const accessLink = node.locator('[data-testid="access-log-link"]')
-      await expect(accessLink).toBeVisible()
-      await expect(accessLink).toContainText('Access Log')
-    }
+    await nodes.first().click()
+    const accessLink = page.locator('[data-testid="access-log-link"]')
+    await expect(accessLink).toBeVisible()
+    await expect(accessLink).toContainText('Access Full Log')
   })
 
   test('roundup node is visible', async ({ page }) => {
     await page.goto('/')
+    // Roundups only exist for past, fully-logged years — 2023 has one.
+    await page.getByRole('button', { name: '2023', exact: true }).click()
     const roundupNode = page.locator('[data-testid="year-wrapup-node"]')
     await expect(roundupNode).toBeVisible()
   })
@@ -49,5 +49,39 @@ test.describe('Timeline Homepage', () => {
     const firstLink = page.locator('[data-testid="access-log-link"]').first()
     await firstLink.click()
     await expect(page).toHaveURL(/\/logs\//)
+  })
+})
+
+test.describe('Timeline Search', () => {
+  test('searching filters cards to matching titles', async ({ page }) => {
+    await page.goto('/')
+    const search = page.locator('[data-testid="search-input"]')
+    await search.fill('witcher')
+
+    const nodes = page.locator('[data-testid="timeline-node"]')
+    const count = await nodes.count()
+    expect(count).toBeGreaterThanOrEqual(1)
+
+    for (let i = 0; i < count; i++) {
+      await expect(nodes.nth(i)).toContainText(/witcher/i)
+    }
+  })
+
+  test('searching with no matches shows empty state', async ({ page }) => {
+    await page.goto('/')
+    const search = page.locator('[data-testid="search-input"]')
+    await search.fill('zzzznonexistentgamezzzz')
+
+    const empty = page.locator('[data-testid="search-empty"]')
+    await expect(empty).toBeVisible()
+    await expect(page.locator('[data-testid="timeline-node"]')).toHaveCount(0)
+  })
+
+  test('clearing search restores year view', async ({ page }) => {
+    await page.goto('/')
+    const search = page.locator('[data-testid="search-input"]')
+    await search.fill('witcher')
+    await page.locator('[data-testid="search-clear"]').click()
+    await expect(search).toHaveValue('')
   })
 })
