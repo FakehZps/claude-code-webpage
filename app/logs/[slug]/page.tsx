@@ -47,7 +47,7 @@ export default function LogPage({ params }: PageProps) {
               src={log.coverImage}
               alt={log.title}
               fill
-              className="object-cover"
+              className="object-cover object-top"
               unoptimized
               priority
             />

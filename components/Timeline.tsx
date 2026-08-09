@@ -288,7 +288,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                       src={log.coverImage}
                       alt={log.title}
                       fill
-                      className="object-cover opacity-70"
+                      className="object-cover object-top opacity-70"
                       unoptimized
                     />
                   ) : (
@@ -364,7 +364,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
                   src={selected.coverImage}
                   alt={selected.title}
                   fill
-                  className="object-cover opacity-80"
+                  className="object-cover object-top opacity-80"
                   unoptimized
                 />
               ) : (

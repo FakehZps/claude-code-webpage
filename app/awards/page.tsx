@@ -28,7 +28,7 @@ function AwardCard({ log, kind }: { log: LogMeta; kind: 'GOTY' | 'WORST' }) {
             src={log.coverImage}
             alt={log.title}
             fill
-            className="object-cover"
+            className="object-cover object-top"
             unoptimized
           />
         ) : (
