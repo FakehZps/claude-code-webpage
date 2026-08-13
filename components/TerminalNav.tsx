@@ -9,6 +9,7 @@ const navLinks = [
   { label: 'ARCHIVE', href: '/', testId: 'nav-archive-link' },
   { label: 'AWARDS', href: '/awards', testId: 'nav-awards-link' },
   { label: 'STATS', href: '/stats', testId: 'nav-stats-link' },
+  { label: 'ADMIN', href: '/admin', testId: 'nav-admin-link' },
 ]
 
 export default function TerminalNav() {
