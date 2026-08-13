@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { formatDate, getRatingStars } from '@/lib/utils'
 import type { LogMeta } from '@/lib/mdx'
 
@@ -25,11 +26,15 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
   const yearGroups = groupByYear(logs)
   const initialYear = yearGroups[0]?.[0] ?? ''
 
+  const searchParams = useSearchParams()
+  const initialPlatform = searchParams.get('platform')
+  const initialGenre = searchParams.get('genre')
+
   const [selectedYear, setSelectedYear] = useState(initialYear)
   const [selected, setSelected] = useState<LogMeta | null>(logs[0] ?? null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterPlatform, setFilterPlatform] = useState('ALL')
-  const [filterGenre, setFilterGenre] = useState('ALL')
+  const [filterPlatform, setFilterPlatform] = useState(initialPlatform ?? 'ALL')
+  const [filterGenre, setFilterGenre] = useState(initialGenre ?? 'ALL')
   const [filterAward, setFilterAward] = useState<'ALL' | 'GOTY' | 'WORST'>('ALL')
   const [filterMinRating, setFilterMinRating] = useState<number | null>(null)
 
@@ -100,7 +105,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
   return (
     <div data-testid="timeline">
       {/* SEARCH BAR */}
-      <div className="mb-2 flex items-center gap-2 border border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+      <div className="mb-2 flex items-center gap-2 border border-neon-cyan/20 bg-black/90 px-3 py-2 backdrop-blur-sm">
         <span className="font-space-mono text-xs text-neon-cyan">SEARCH&gt;</span>
         <input
           type="text"
@@ -130,14 +135,14 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
       </div>
 
       {/* FILTER BAR */}
-      <div className="mb-3 flex flex-wrap items-center gap-2 border border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+      <div className="mb-3 flex flex-wrap items-center gap-2 border border-neon-cyan/20 bg-black/90 px-3 py-2 backdrop-blur-sm">
         <span className="font-space-mono text-[10px] tracking-widest text-gray-500">FILTER&gt;</span>
 
         <select
           value={filterPlatform}
           onChange={(e) => setFilterPlatform(e.target.value)}
           data-testid="filter-platform"
-          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+          className="border border-neon-cyan/20 bg-black/90 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
         >
           <option value="ALL">ALL PLATFORMS</option>
           {platforms.map(p => (
@@ -149,7 +154,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           value={filterGenre}
           onChange={(e) => setFilterGenre(e.target.value)}
           data-testid="filter-genre"
-          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+          className="border border-neon-cyan/20 bg-black/90 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
         >
           <option value="ALL">ALL GENRES</option>
           {genres.map(g => (
@@ -161,7 +166,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           value={filterMinRating ?? ''}
           onChange={(e) => setFilterMinRating(e.target.value ? Number(e.target.value) : null)}
           data-testid="filter-rating"
-          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+          className="border border-neon-cyan/20 bg-black/90 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
         >
           <option value="">ANY RATING</option>
           {RATING_OPTIONS.map(r => (
@@ -173,7 +178,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
           value={filterAward}
           onChange={(e) => setFilterAward(e.target.value as 'ALL' | 'GOTY' | 'WORST')}
           data-testid="filter-award"
-          className="border border-neon-cyan/20 bg-black/60 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
+          className="border border-neon-cyan/20 bg-black/90 px-1.5 py-0.5 font-space-mono text-[10px] text-gray-300 focus:outline-none"
         >
           <option value="ALL">ALL AWARDS</option>
           {AWARD_OPTIONS.map(a => (
@@ -194,7 +199,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
 
       <div className="grid h-[75vh] grid-cols-1 gap-3 md:grid-cols-[1fr_280px] lg:grid-cols-[180px_1fr_300px]">
       {/* LEFT: Archive index — hidden on mobile/tablet */}
-      <aside className="hidden flex-col overflow-hidden border border-neon-cyan/20 bg-black/40 backdrop-blur-sm lg:flex">
+      <aside className="hidden flex-col overflow-hidden border border-neon-cyan/20 bg-black/90 backdrop-blur-sm lg:flex">
         <div className="border-b border-neon-cyan/20 px-3 py-2">
           <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
             // ARCHIVE
@@ -245,7 +250,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
 
       {/* CENTER: Filtered card list for selected year */}
       <div className="flex flex-col overflow-hidden">
-        <div className="border-b border-neon-cyan/20 bg-black/40 px-3 py-2 backdrop-blur-sm">
+        <div className="border-b border-neon-cyan/20 bg-black/90 px-3 py-2 backdrop-blur-sm">
           <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
             // {isSearching ? 'SEARCH RESULTS' : hasActiveFilters ? 'FILTERED' : selectedYear}
             <span className="ml-2 font-space-mono text-[10px] font-normal text-gray-400">
@@ -348,7 +353,7 @@ export default function Timeline({ logs }: { logs: LogMeta[] }) {
       </div>
 
       {/* RIGHT: Detail panel */}
-      <aside className="hidden flex-col overflow-hidden border border-neon-cyan/20 bg-black/40 backdrop-blur-sm md:flex">
+      <aside className="hidden flex-col overflow-hidden border border-neon-cyan/20 bg-black/90 backdrop-blur-sm md:flex">
         <div className="border-b border-neon-cyan/20 px-3 py-2">
           <p className="font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
             // LOG DETAIL

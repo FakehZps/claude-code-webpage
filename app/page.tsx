@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { getAllLogs } from '@/lib/mdx'
 import { getGamesData } from '@/lib/games'
 import Timeline from '@/components/Timeline'
@@ -19,7 +20,7 @@ export default function HomePage() {
       <div className="relative z-[1]">
         {/* Header */}
         <header className="mb-16 text-center">
-          <div className="mx-auto mb-6 inline-block rounded-sm border border-neon-cyan/20 bg-black/50 px-8 py-6 backdrop-blur-sm">
+          <div className="mx-auto mb-6 inline-block rounded-sm border border-neon-cyan/20 bg-black/80 px-8 py-6 backdrop-blur-sm">
             <p className="mb-2 font-space-mono text-xs tracking-widest text-gray-600">
               // INITIALIZING MEMORY_TIMELINE
             </p>
@@ -33,7 +34,9 @@ export default function HomePage() {
           <div className="mx-auto h-px max-w-xs bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50" />
         </header>
 
-        <Timeline logs={logs} />
+        <Suspense fallback={null}>
+          <Timeline logs={logs} />
+        </Suspense>
       </div>
     </div>
   )

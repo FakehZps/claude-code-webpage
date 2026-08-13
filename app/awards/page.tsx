@@ -89,8 +89,8 @@ export default function AwardsPage() {
 
       <div className="relative z-[1]">
         <header className="mb-12 text-center">
-          <div className="mx-auto mb-6 inline-block rounded-sm border border-neon-cyan/20 bg-black/50 px-8 py-6 backdrop-blur-sm">
-            <p className="mb-2 font-space-mono text-xs tracking-widest text-gray-600">
+          <div className="mx-auto mb-6 inline-block rounded-sm border border-neon-cyan/20 bg-black/80 px-8 py-6 backdrop-blur-sm">
+            <p className="mb-2 font-space-mono text-xs tracking-widest text-gray-400">
               // AWARDS_ARCHIVE
             </p>
             <h1 className="font-orbitron text-3xl font-black tracking-wider text-white neon-text-cyan sm:text-4xl">
@@ -120,7 +120,7 @@ export default function AwardsPage() {
         <div className="mx-auto mt-12 max-w-3xl text-center">
           <Link
             href="/"
-            className="font-space-mono text-xs text-gray-600 transition-colors hover:text-neon-cyan"
+            className="text-shadow-crisp font-space-mono text-xs text-gray-400 transition-colors hover:text-neon-cyan"
           >
             [&gt; Return to Memory_Timeline]
           </Link>

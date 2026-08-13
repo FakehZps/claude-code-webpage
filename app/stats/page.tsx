@@ -13,7 +13,7 @@ function StatTile({ label, value }: { label: string; value: string }) {
   return (
     <div
       data-testid="stat-tile"
-      className="border border-neon-cyan/20 bg-black/40 p-4 text-center backdrop-blur-sm"
+      className="border border-neon-cyan/20 bg-black/90 p-4 text-center backdrop-blur-sm"
     >
       <p className="font-orbitron text-2xl font-black text-white neon-text-cyan sm:text-3xl">
         {value}
@@ -41,23 +41,52 @@ function BarColumn({ label, count, max }: { label: string; count: number; max: n
   )
 }
 
-function BarRow({ label, count, max }: { label: string; count: number; max: number }) {
+function BarRow({
+  label,
+  count,
+  max,
+  href,
+}: {
+  label: string
+  count: number
+  max: number
+  href?: string
+}) {
   const widthPct = max > 0 ? Math.max((count / max) * 100, 3) : 0
-  return (
-    <div className="flex items-center gap-2" title={`${label}: ${count}`}>
-      <span className="w-36 shrink-0 truncate font-space-mono text-[11px] text-gray-400">
+  const content = (
+    <>
+      <span className="w-36 shrink-0 truncate font-space-mono text-[11px] text-gray-400 group-hover:text-neon-pink">
         {label}
       </span>
       <div className="h-[18px] flex-1 bg-black/30">
         <div
-          className="h-full rounded-r-sm bg-neon-pink/60"
+          className="h-full rounded-r-sm bg-neon-pink/60 group-hover:bg-neon-pink/90"
           style={{ width: `${widthPct}%` }}
         />
       </div>
       <span className="w-8 shrink-0 text-right font-space-mono text-[11px] text-gray-300">
         {count}
       </span>
-    </div>
+    </>
+  )
+
+  if (!href) {
+    return (
+      <div className="flex items-center gap-2" title={`${label}: ${count}`}>
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      href={href}
+      data-testid="stats-drilldown-link"
+      title={`View all ${label} games`}
+      className="group flex items-center gap-2 transition-opacity hover:opacity-90"
+    >
+      {content}
+    </Link>
   )
 }
 
@@ -120,8 +149,8 @@ export default function StatsPage() {
 
       <div className="relative z-[1]">
         <header className="mb-12 text-center">
-          <div className="mx-auto mb-6 inline-block rounded-sm border border-neon-cyan/20 bg-black/50 px-8 py-6 backdrop-blur-sm">
-            <p className="mb-2 font-space-mono text-xs tracking-widest text-gray-600">
+          <div className="mx-auto mb-6 inline-block rounded-sm border border-neon-cyan/20 bg-black/80 px-8 py-6 backdrop-blur-sm">
+            <p className="mb-2 font-space-mono text-xs tracking-widest text-gray-400">
               // SYSTEM_ANALYTICS
             </p>
             <h1 className="font-orbitron text-3xl font-black tracking-wider text-white neon-text-cyan sm:text-4xl">
@@ -148,7 +177,7 @@ export default function StatsPage() {
             <p className="mb-3 font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
               // ENTRIES PER YEAR
             </p>
-            <div data-testid="stats-year-chart" className="flex items-end gap-1 border border-neon-cyan/10 bg-black/30 p-3">
+            <div data-testid="stats-year-chart" className="flex items-end gap-1 border border-neon-cyan/10 bg-black/90 p-3">
               {years.map((year) => (
                 <BarColumn key={year} label={year} count={yearCounts.get(year) ?? 0} max={maxYearCount} />
               ))}
@@ -160,7 +189,7 @@ export default function StatsPage() {
             <p className="mb-3 font-orbitron text-xs font-bold tracking-widest text-neon-cyan">
               // RATING DISTRIBUTION
             </p>
-            <div data-testid="stats-rating-chart" className="flex items-end gap-1 border border-neon-cyan/10 bg-black/30 p-3">
+            <div data-testid="stats-rating-chart" className="flex items-end gap-1 border border-neon-cyan/10 bg-black/90 p-3">
               {Array.from(ratingBuckets.entries()).map(([bucket, count]) => (
                 <BarColumn key={bucket} label={String(bucket)} count={count} max={maxRatingCount} />
               ))}
@@ -173,9 +202,15 @@ export default function StatsPage() {
               <p className="mb-3 font-orbitron text-xs font-bold tracking-widest text-neon-pink">
                 // TOP PLATFORMS
               </p>
-              <div data-testid="stats-platform-chart" className="space-y-1.5 border border-neon-pink/10 bg-black/30 p-3">
+              <div data-testid="stats-platform-chart" className="space-y-1.5 border border-neon-pink/10 bg-black/90 p-3">
                 {topPlatforms.map(([platform, count]) => (
-                  <BarRow key={platform} label={platform} count={count} max={maxPlatformCount} />
+                  <BarRow
+                    key={platform}
+                    label={platform}
+                    count={count}
+                    max={maxPlatformCount}
+                    href={platform === 'Other' ? undefined : `/?platform=${encodeURIComponent(platform)}`}
+                  />
                 ))}
               </div>
             </section>
@@ -185,15 +220,21 @@ export default function StatsPage() {
               <p className="mb-3 font-orbitron text-xs font-bold tracking-widest text-neon-pink">
                 // TOP GENRES
               </p>
-              <div data-testid="stats-genre-chart" className="space-y-1.5 border border-neon-pink/10 bg-black/30 p-3">
+              <div data-testid="stats-genre-chart" className="space-y-1.5 border border-neon-pink/10 bg-black/90 p-3">
                 {topGenres.map(([genre, count]) => (
-                  <BarRow key={genre} label={genre} count={count} max={maxGenreCount} />
+                  <BarRow
+                    key={genre}
+                    label={genre}
+                    count={count}
+                    max={maxGenreCount}
+                    href={genre === 'Other' ? undefined : `/?genre=${encodeURIComponent(genre)}`}
+                  />
                 ))}
               </div>
             </section>
           </div>
 
-          <p className="text-center font-space-mono text-[10px] text-gray-600">
+          <p className="text-shadow-crisp text-center font-space-mono text-[10px] text-gray-400">
             Most-logged platform: <span className="text-neon-cyan">{topPlatformName}</span>
           </p>
         </div>
@@ -201,7 +242,7 @@ export default function StatsPage() {
         <div className="mx-auto mt-12 max-w-4xl text-center">
           <Link
             href="/"
-            className="font-space-mono text-xs text-gray-600 transition-colors hover:text-neon-cyan"
+            className="text-shadow-crisp font-space-mono text-xs text-gray-400 transition-colors hover:text-neon-cyan"
           >
             [&gt; Return to Memory_Timeline]
           </Link>
