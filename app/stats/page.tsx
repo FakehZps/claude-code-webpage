@@ -25,19 +25,52 @@ function StatTile({ label, value }: { label: string; value: string }) {
   )
 }
 
-function BarColumn({ label, count, max }: { label: string; count: number; max: number }) {
+function BarColumn({
+  label,
+  count,
+  max,
+  href,
+}: {
+  label: string
+  count: number
+  max: number
+  href?: string
+}) {
   const heightPct = max > 0 ? Math.max((count / max) * 100, count > 0 ? 4 : 0) : 0
-  return (
-    <div className="flex flex-1 flex-col items-center gap-1" title={`${label}: ${count}`}>
-      <span className="font-space-mono text-[10px] text-gray-400">{count || ''}</span>
+  const content = (
+    <>
+      <span className="font-space-mono text-[10px] text-gray-400 group-hover:text-neon-cyan">
+        {count || ''}
+      </span>
       <div className="flex h-32 w-full items-end justify-center">
         <div
-          className="w-full max-w-[24px] rounded-t-sm bg-neon-cyan/70"
+          className="w-full max-w-[24px] rounded-t-sm bg-neon-cyan/70 group-hover:bg-neon-cyan"
           style={{ height: `${heightPct}%` }}
         />
       </div>
-      <span className="font-space-mono text-[10px] tracking-wide text-gray-500">{label}</span>
-    </div>
+      <span className="font-space-mono text-[10px] tracking-wide text-gray-500 group-hover:text-neon-cyan">
+        {label}
+      </span>
+    </>
+  )
+
+  if (!href) {
+    return (
+      <div className="flex flex-1 flex-col items-center gap-1" title={`${label}: ${count}`}>
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      href={href}
+      data-testid="stats-drilldown-link"
+      title={`View all ${label} games`}
+      className="group flex flex-1 flex-col items-center gap-1 transition-opacity hover:opacity-90"
+    >
+      {content}
+    </Link>
   )
 }
 
@@ -179,7 +212,13 @@ export default function StatsPage() {
             </p>
             <div data-testid="stats-year-chart" className="flex items-end gap-1 border border-neon-cyan/10 bg-black/90 p-3">
               {years.map((year) => (
-                <BarColumn key={year} label={year} count={yearCounts.get(year) ?? 0} max={maxYearCount} />
+                <BarColumn
+                  key={year}
+                  label={year}
+                  count={yearCounts.get(year) ?? 0}
+                  max={maxYearCount}
+                  href={`/?year=${year}`}
+                />
               ))}
             </div>
           </section>

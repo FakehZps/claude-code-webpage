@@ -24,14 +24,19 @@ const AWARD_OPTIONS: Array<'GOTY' | 'WORST'> = ['GOTY', 'WORST']
 
 export default function Timeline({ logs }: { logs: LogMeta[] }) {
   const yearGroups = groupByYear(logs)
-  const initialYear = yearGroups[0]?.[0] ?? ''
 
   const searchParams = useSearchParams()
   const initialPlatform = searchParams.get('platform')
   const initialGenre = searchParams.get('genre')
+  const yearParam = searchParams.get('year')
+  const yearParamLogs = yearParam ? logs.filter(l => l.date.startsWith(yearParam)) : []
+
+  const initialYear = yearParamLogs.length > 0 ? yearParam! : yearGroups[0]?.[0] ?? ''
 
   const [selectedYear, setSelectedYear] = useState(initialYear)
-  const [selected, setSelected] = useState<LogMeta | null>(logs[0] ?? null)
+  const [selected, setSelected] = useState<LogMeta | null>(
+    yearParamLogs[0] ?? logs[0] ?? null
+  )
   const [searchQuery, setSearchQuery] = useState('')
   const [filterPlatform, setFilterPlatform] = useState(initialPlatform ?? 'ALL')
   const [filterGenre, setFilterGenre] = useState(initialGenre ?? 'ALL')
