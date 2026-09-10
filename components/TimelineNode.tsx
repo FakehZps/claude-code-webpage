@@ -39,7 +39,7 @@ export default function TimelineNode({ log, side }: TimelineNodeProps) {
               src={log.coverImage}
               alt={log.title}
               fill
-              className="object-cover opacity-60 transition-opacity duration-300 group-hover:opacity-80"
+              className="object-cover object-top opacity-60 transition-opacity duration-300 group-hover:opacity-80"
               unoptimized
             />
           ) : (

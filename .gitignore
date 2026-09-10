@@ -12,3 +12,9 @@ playwright-report/
 # Claude Code internal
 .agents/
 .claude/
+
+.vercel
+
+# Local data exports / build artifacts
+*.tsbuildinfo
+*.csv
