@@ -4884,5 +4884,19 @@
     "award": null,
     "slug": "pioneers-of-pagonia-review",
     "hasFullReview": false
+  },
+  {
+    "title": "Pioneers of Pagonia",
+    "date": "2026-09-11",
+    "completionDate": "2026-09-11",
+    "category": "review",
+    "platform": "PC",
+    "genre": "Strategy",
+    "rating": 7.5,
+    "coverImage": "",
+    "excerpt": "Something off with it",
+    "award": null,
+    "slug": "pioneers-of-pagonia-review-2",
+    "hasFullReview": false
   }
 ]
