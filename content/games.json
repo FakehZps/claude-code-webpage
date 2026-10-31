@@ -4898,5 +4898,19 @@
     "award": null,
     "slug": "hogwarts-legacy-review",
     "hasFullReview": false
+  },
+  {
+    "title": "Resident Evil Requiem",
+    "date": "2026-10-24",
+    "completionDate": "2026-10-24",
+    "category": "review",
+    "platform": "PC",
+    "genre": "Horror",
+    "rating": 8.5,
+    "coverImage": "",
+    "excerpt": "Racoon City",
+    "award": null,
+    "slug": "resident-evil-requiem-review",
+    "hasFullReview": false
   }
 ]
