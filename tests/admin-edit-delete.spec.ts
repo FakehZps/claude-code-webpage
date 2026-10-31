@@ -15,6 +15,8 @@ async function login(page: Page) {
   await page.locator('[data-testid="login-password-input"]').fill(DEV_PASSWORD)
   await page.locator('[data-testid="login-submit-button"]').click()
   await expect(page).toHaveURL('/admin/new')
+  // Login does a full page load; wait for hydration before interacting.
+  await page.waitForLoadState('networkidle')
 }
 
 async function createFixture(

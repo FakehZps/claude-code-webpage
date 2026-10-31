@@ -1,25 +1,13 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 
+// Plain form POST: works before hydration and does a full navigation,
+// so the cleared cookie takes effect and no stale client cache is reused.
 export default function LogoutButton() {
-  const router = useRouter()
-
-  async function handleLogout() {
-    await fetch('/api/logout', { method: 'POST' })
-    router.push('/login')
-    router.refresh()
-  }
-
   return (
-    <Button
-      type="button"
-      variant="secondary"
-      data-testid="logout-button"
-      onClick={handleLogout}
-    >
-      [ LOGOUT ]
-    </Button>
+    <form action="/api/logout" method="post">
+      <Button type="submit" variant="secondary" data-testid="logout-button">
+        [ LOGOUT ]
+      </Button>
+    </form>
   )
 }

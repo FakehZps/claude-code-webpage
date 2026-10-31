@@ -1,10 +1,9 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 export default function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -29,9 +28,15 @@ export default function LoginForm() {
         return
       }
 
-      const from = searchParams.get('from') ?? '/admin/new'
-      router.push(from)
-      router.refresh()
+      // Full navigation (not router.push) so the new session cookie is sent
+      // and middleware re-runs; the client router cache can otherwise serve a
+      // stale pre-login result and leave the form stuck on "authenticating".
+      const fromParam = searchParams.get('from')
+      const from =
+        fromParam && fromParam.startsWith('/') && !fromParam.startsWith('//')
+          ? fromParam
+          : '/admin/new'
+      window.location.assign(from)
     } catch {
       setError('Network error — try again')
       setLoading(false)
