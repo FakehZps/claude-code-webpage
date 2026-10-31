@@ -4884,5 +4884,19 @@
     "award": null,
     "slug": "pioneers-of-pagonia-review-2",
     "hasFullReview": false
+  },
+  {
+    "title": "Hogwarts Legacy",
+    "date": "2026-10-18",
+    "completionDate": "2026-10-18",
+    "category": "review",
+    "platform": "PC",
+    "genre": "Adventure",
+    "rating": 8,
+    "coverImage": "",
+    "excerpt": "Abrakafuckyou!",
+    "award": null,
+    "slug": "hogwarts-legacy-review",
+    "hasFullReview": false
   }
 ]
